@@ -8,12 +8,14 @@
 
 #import "WebViewController.h"
 #import <WebKit/WebKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface WebViewController()<WKUIDelegate, WKNavigationDelegate>
 @property NSUInteger index;
 @property NSString *urlString;
 @property (weak, nonatomic) IBOutlet UILabel *lblURLlink;
 @property (nonatomic) WKWebView *webView;
+@property UIActivityIndicatorView *spinner;
 @end
 
 @implementation WebViewController
@@ -31,6 +33,15 @@
     [super viewDidLoad];
     [self setupWebView];
     [self setURL:_urlString];
+    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _spinner.center = CGPointMake(UIScreen.mainScreen.bounds.size.width/2, UIScreen.mainScreen.bounds.size.height/2);
+    _spinner.hidesWhenStopped = YES;
+    _spinner.color = [UIColor blueColor];
+    _spinner.transform = CGAffineTransformMakeScale(2, 2);
+    [self.view addSubview:_spinner];
+    [_spinner startAnimating];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -170,6 +181,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 // 読み込み完了
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"読み込み完了");
+    [_spinner stopAnimating];
 }
 
 // 読み込み失敗
